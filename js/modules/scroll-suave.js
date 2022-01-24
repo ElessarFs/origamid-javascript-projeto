@@ -1,9 +1,13 @@
-export default function initScrollSuave() {
-  const linksInternos = document.querySelectorAll(
-    '[data-js="menu"] a[href^="#"]',
-  );
+export default class ScrollSuave {
+  constructor(links, options) {
+    this.linksInternos = document.querySelectorAll(links);
+    this.options = options || {
+      behavior: "smooth",
+      block: "start",
+    };
+  }
 
-  function scrollToSection(event) {
+  scrollToSection(event) {
     event.preventDefault();
     // também poderia pegar assim: event.currentTarget.href só que assim me traria o link inteiro, não é o que queremos
     const href = event.currentTarget.getAttribute("href");
@@ -15,15 +19,23 @@ export default function initScrollSuave() {
       behavior: 'smooth'
     });
   */
-
     // essa é preferencial
-    section.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
+    section.scrollIntoView(this.options);
   }
 
-  linksInternos.forEach((item) => {
-    item.addEventListener("click", scrollToSection);
-  });
+  init() {
+    if (this.linksInternos.length) {
+      this.addLinkEvent();
+    }
+    return this;
+  }
+
+  addLinkEvent() {
+    this.linksInternos.forEach((item) => {
+      item.addEventListener("click", this.scrollToSection.bind(this));
+      // aqui também funcionaria se eu encapsulasse com uma arrow function
+      /* (event) => {this.scrollToSection(event)} */
+      // o ruim é que a gente perde a referencia da função pois dessa forma estamos passando uma anonima, nunca mais vamos conseguir retirar esse evento
+    });
+  }
 }
