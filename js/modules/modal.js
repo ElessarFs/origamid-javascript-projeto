@@ -1,29 +1,34 @@
-export default function initModal() {
-  const botaoAbrir = document.querySelector('[data-modal="abrir"]');
-  const botaoFechar = document.querySelector('[data-modal="fechar"]');
-  const containerModal = document.querySelector('[data-modal="container"]');
+export default class initModal {
+  constructor(abrir, fechar, containerModal) {
+    this.botaoAbrir = document.querySelector(abrir);
+    this.botaoFechar = document.querySelector(fechar);
+    this.containerModal = document.querySelector(containerModal);
+  }
 
-  function abrirModal(event) {
+  toggleModal(event) {
     event.preventDefault();
-    containerModal.classList.add("ativo");
+    this.containerModal.classList.toggle("ativo");
   }
 
-  function fecharModal(event) {
-    event.preventDefault();
-    containerModal.classList.remove("ativo");
+  cliqueForaModal(event) {
+    if (event.currentTarget === event.target) this.toggleModal(event);
   }
 
-  function cliqueForaModal(event) {
-    console.log(this);
-    console.log(event.target);
-    if (this === event.target) fecharModal(event);
+  addModalEvents() {
+    this.botaoAbrir.addEventListener("click", this.toggleModal.bind(this));
+    this.botaoFechar.addEventListener("click", this.toggleModal.bind(this));
+    this.containerModal.addEventListener(
+      "click",
+      this.cliqueForaModal.bind(this),
+    );
   }
 
-  if (botaoAbrir && botaoFechar && containerModal) {
-    botaoAbrir.addEventListener("click", abrirModal);
-    botaoFechar.addEventListener("click", fecharModal);
-    containerModal.addEventListener("click", cliqueForaModal);
-
-    // André sugeriu de colocarmos o toggle e substituir nosso abrir modal e fechar modal por essa única função, prefiro não fazer isso agora por motivos didáticos, mas fica a possibilidade em fazer isso aqui
+  init() {
+    if (this.botaoAbrir && this.botaoFechar && this.containerModal) {
+      this.addModalEvents();
+    }
+    return this;
   }
+
+  // André sugeriu de colocarmos o toggle e substituir nosso abrir modal e fechar modal por essa única função, prefiro não fazer isso agora por motivos didáticos, mas fica a possibilidade em fazer isso aqui
 }
