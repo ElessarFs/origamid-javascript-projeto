@@ -1,30 +1,38 @@
 import outsideClick from "./outsideclick.js";
 
-export default function initDropdownMenu() {
-  const dropdownMenus = document.querySelectorAll("[data-dropdown]");
+export default class DropdownMenu {
+  constructor(dropdownMenus, events) {
+    this.dropdownMenus = document.querySelectorAll(dropdownMenus);
 
-  function handleClick(event) {
+    this.activeClass = "ativo";
+
+    if (events === undefined) this.events = ["touchstart", "click"];
+    else this.events = events;
+
+    this.activeDropdownMenu = this.activeDropdownMenu.bind(this);
+  }
+
+  activeDropdownMenu(event) {
     event.preventDefault();
-    this.classList.add("ativo");
-    outsideClick(this, ["click", "touchstart"], () => {
-      this.classList.remove("ativo");
+    const element = event.currentTarget;
+    element.classList.add(this.activeClass);
+    outsideClick(element, this.events, () => {
+      element.classList.remove("ativo");
     });
   }
 
-  dropdownMenus.forEach((menu) => {
-    // menu.addEventListener("click", handleClick);
-    ["touchstart", "click"].forEach((userEvent) => {
-      menu.addEventListener(userEvent, handleClick);
+  addDropdownMenusEvent() {
+    this.dropdownMenus.forEach((menu) => {
+      this.events.forEach((userEvent) => {
+        menu.addEventListener(userEvent, this.activeDropdownMenu);
+      });
     });
-  });
+  }
 
-  /* Bom exemplo de porque o this em funções funciona diferente do this em uma arrowFunction
-  function handleClick(event) {
-  event.preventDefault();
-  this.classList.add("ativo");
-  outsideClick(this, ["click", "touchstart"], function () {
-    console.log(this);
-    this.classList.remove("ativo");
-  });
-} */
+  init() {
+    if (this.dropdownMenus.length) {
+      this.addDropdownMenusEvent();
+    }
+    return this;
+  }
 }
