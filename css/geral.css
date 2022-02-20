@@ -222,7 +222,7 @@ body {
   }
 
   .grid-section h1 {
-    font-size: 3rem;
+    font-size: 2.5rem;
   }
 
   .menu {
@@ -278,13 +278,20 @@ body {
 }
 
 [data-js="accordion"] dt::after {
-  content: "↴";
+  content: "";
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  background: url("../img/arrow-red.svg") no-repeat center center;
+  transform: rotate(90deg);
+  transition: transform 0.3s;
   margin-left: 10px;
 }
 
 [data-js="accordion"] dt.ativo::after {
-  content: "⮥";
+  content: "";
   margin-left: 10px;
+  transform: rotate(-90deg);
 }
 
 [data-js="accordion"] dd.ativo {
@@ -348,4 +355,11 @@ body {
   padding: 0.2rem 0.5rem;
   font-weight: bold;
   border-radius: 2px;
+}
+
+.arrow-black {
+  background: url("../img/arrow-black.svg") no-repeat center center;
+  display: inline-block;
+  width: 8px;
+  height: 8px;
 }
